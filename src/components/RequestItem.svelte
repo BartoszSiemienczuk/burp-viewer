@@ -5,11 +5,28 @@
     export let idx;
 
     let request = {};
+    let response = {};
     let showDetails = false;
 
     onMount(() => {
         request = parseRequest(item.request.value);
+        if(item.response) {
+            response = parseRequest(item.response.value);
+        } else {
+            response = {
+                body: '',
+                headers: []
+            }
+        }
     })
+
+    const prettyJson = (content) => {
+        try {
+            return JSON.stringify(JSON.parse(content),null,2)
+        } catch (error) {
+            return content;
+        }
+    }
 </script>
 
 <tr id="item-row-main-{idx}" on:click={() => {showDetails = !showDetails}}>
@@ -22,26 +39,73 @@
 {#if showDetails}
 <tr id="item-row-details-{idx}">
     <td colspan="5">
-        <table class="table details-table">
-            <thead>
-                <tr>
-                    <td>Headers</td>
-                    <td>Body</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <ul class="list-group">
-                        {#each request.headers as {key, value}}
-                            <li class="list-group-item"><span class="fw-bold">{key}:</span> {value}</li>
-                        {/each}
-                        </ul>
-                    </td>
-                    <td>{request.body}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="accordion" id="details-accordion-{idx}">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#details-accordion-collapse-request-{idx}">
+                        Request details
+                    </button>
+                </h2>
+                <div id="details-accordion-collapse-request-{idx}" class="accordion-collapse collapse" data-bs-parent="#details-accordion-{idx}">
+                    <table class="table details-table">
+                        <thead>
+                            <tr>
+                                <td>Headers</td>
+                                <td>Body</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <ul class="list-group">
+                                    {#each request.headers as {key, value}}
+                                        <li class="list-group-item"><span class="fw-bold">{key}:</span> {value}</li>
+                                    {/each}
+                                    </ul>
+                                </td>
+                                <td>
+                                    <pre>
+                                        {prettyJson(request.body)}
+                                    </pre></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#details-accordion-collapse-response-{idx}">
+                        Response details
+                    </button>
+                </h2>
+                <div id="details-accordion-collapse-response-{idx}" class="accordion-collapse collapse" data-bs-parent="#details-accordion-{idx}">
+                    <table class="table details-table">
+                        <thead>
+                            <tr>
+                                <td>Headers</td>
+                                <td>Body</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <ul class="list-group">
+                                        {#each response.headers as {key, value}}
+                                            <li class="list-group-item"><span class="fw-bold">{key}:</span> {value}</li>
+                                        {/each}
+                                        </ul>
+                                </td>
+                                <td>
+                                    <pre>
+                                        {prettyJson(response.body)}
+                                    </pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </td>
 </tr>
 {/if}

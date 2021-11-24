@@ -1,20 +1,36 @@
-export function parseRequest(request) {
-    let lines = request.split(/\r?\n/);
-    let lastLine = lines[lines.length-1];
-    let body = "";
-    if(lastLine) {
-        body = lastLine;
+export function parseRequest(request) {   
+    return {
+        headers: getHeaders(request),
+        body: getBody(request)
     }
+}
+
+function getHeaders(request) {
+    let lines = request.split(/\r?\n/);
     let headers = []
-    lines.forEach((line, idx) => {
+    for(const [idx, line] of lines.entries()) {
         if(idx>0 && idx<lines.length-1 && line) {
             let split = line.split(':');
-            headers.push({'key':split[0], 'value':split[1].trim()});
+            if(split.length>1) {
+                headers.push({'key':split[0], 'value':split[1].trim()});
+            }
+        } else if(!line) {
+            break;
         }
-    })
-
-    return {
-        headers: headers,
-        body: body
     }
+    return headers;
+}
+
+function getBody(request) {
+    let lines = request.split(/\r?\n/);
+    let body = "";
+    let emptyLineFound = false;
+    for(const [idx, line] of lines.entries()) {
+        if(emptyLineFound) {
+            body += line;
+        } else if(!line) {
+            emptyLineFound = true;
+        }
+    }
+    return body;
 }
