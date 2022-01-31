@@ -1,11 +1,14 @@
-export function parseRequest(request) {   
+export function parseRequest(request, isBase64Encoded) {   
     return {
-        headers: getHeaders(request),
-        body: getBody(request)
+        headers: getHeaders(request, isBase64Encoded),
+        body: getBody(request, isBase64Encoded)
     }
 }
 
-function getHeaders(request) {
+function getHeaders(request, isBase64Encoded) {
+    if(isBase64Encoded) {
+        request = atob(request);
+    }
     let lines = request.split(/\r?\n/);
     let headers = []
     for(const [idx, line] of lines.entries()) {
@@ -21,7 +24,10 @@ function getHeaders(request) {
     return headers;
 }
 
-function getBody(request) {
+function getBody(request, isBase64Encoded) {
+    if(isBase64Encoded) {
+        request = atob(request);
+    }
     let lines = request.split(/\r?\n/);
     let body = "";
     let emptyLineFound = false;

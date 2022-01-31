@@ -9,9 +9,9 @@
     let showDetails = false;
 
     onMount(() => {
-        request = parseRequest(item.request.value);
+        request = parseRequest(item.request.value, item.request.base64);
         if(item.response) {
-            response = parseRequest(item.response.value);
+            response = parseRequest(item.response.value, item.request.base64);
         } else {
             response = {
                 body: '',
@@ -123,5 +123,8 @@
     .url-column {
         max-width:230px;
         word-break: break-all;
+    }
+    .details-table .list-group-item {
+        overflow-wrap: anywhere;
     }
 </style>
