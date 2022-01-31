@@ -6,7 +6,7 @@ export function parseRequest(request, isBase64Encoded) {
 }
 
 function getHeaders(request, isBase64Encoded) {
-    if(isBase64Encoded == true) {
+    if(isBase64Encoded==true) {
         request = atob(request);
     }
     let lines = request.split(/\r?\n/);
@@ -25,7 +25,7 @@ function getHeaders(request, isBase64Encoded) {
 }
 
 function getBody(request, isBase64Encoded) {
-    if(isBase64Encoded == true) {
+    if(isBase64Encoded==true) {
         request = atob(request);
     }
     let lines = request.split(/\r?\n/);

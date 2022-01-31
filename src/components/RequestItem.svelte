@@ -9,9 +9,9 @@
     let showDetails = false;
 
     onMount(() => {
-        request = parseRequest(item.request.value, item.request.base64);
+        request = parseRequest(item.request.value, item.request.base64 === 'true');
         if(item.response) {
-            response = parseRequest(item.response.value, item.request.base64);
+            response = parseRequest(item.response.value, item.request.base64 === 'true');
         } else {
             response = {
                 body: '',
