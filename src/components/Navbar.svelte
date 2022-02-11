@@ -38,8 +38,7 @@
           </li>
         </ul>
         <form class="d-flex">
-          <input class="form-control me-2" type="file" bind:files>
-          <button class="btn btn-outline-success" type="button" on:click={loadFile}>Load</button>
+          <input class="form-control me-2" type="file" bind:files on:change={() => loadFile()}>
           <button class="btn btn-outline-danger" type="button" on:click={clear}>Clear</button>
         </form>
       </div>

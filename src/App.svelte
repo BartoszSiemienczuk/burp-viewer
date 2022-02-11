@@ -5,9 +5,7 @@
 	let items = [];
 
 	const onItemsLoaded = function (result) {
-		console.log("Items are loaded");
 		items = result;
-		console.log(items);
 	}
 </script>	
 
