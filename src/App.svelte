@@ -11,5 +11,5 @@
 
 <main>
 	<Navbar {onItemsLoaded}/>
-	<Viewer {items}/>
+	<Viewer rawItems={items}/>
 </main>
