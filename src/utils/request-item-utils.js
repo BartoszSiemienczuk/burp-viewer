@@ -30,7 +30,7 @@ function getHeaders(request, isBase64Encoded) {
         if(idx>0 && idx<lines.length-1 && line) {
             let split = line.split(':');
             if(split.length>1) {
-                headers.push({'key':split[0], 'value':split[1].trim()});
+                headers.push({'key':split[0], 'value':split.slice(1).join(':').trim()});
             }
         } else if(!line) {
             break;
