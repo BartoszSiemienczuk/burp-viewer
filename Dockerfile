@@ -1,4 +1,4 @@
-FROM node:17-alpine
+FROM node:17-alpine AS build-stage
 
 WORKDIR /usr/src/app
 
@@ -12,8 +12,12 @@ COPY ./public ./public
 
 RUN npm run-script build
 
-EXPOSE 5000
+# STAGE 2
 
-ENV HOST=0.0.0.0
+FROM nginx:stable-alpine
 
-CMD [ "npm", "start" ]
+COPY --from=build-stage /usr/src/app/public /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
