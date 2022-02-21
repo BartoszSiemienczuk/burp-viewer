@@ -1,16 +1,17 @@
 <script>
     import Filter from "./Filter.svelte";
     import RequestItem from "./RequestItem.svelte"; 
+
     export let rawItems = [];
 
-    let requestItems = [];
+    let requestItemComponents = [];
 
     const runFilter = function(filter) {
-        requestItems.forEach(item => item.filter(filter));
+        requestItemComponents.forEach(item => item.filter(filter));
     }
 
     const collapseAll = function() {
-        requestItems.forEach(item => item.hideDetails());
+        requestItemComponents.forEach(item => item.hideDetails());
     }
 </script>
 
@@ -29,7 +30,7 @@
             </thead>
             <tbody>
                 {#each rawItems as item, idx}
-                    <RequestItem bind:this={requestItems[idx]} item={item} idx={idx}/>
+                    <RequestItem bind:this={requestItemComponents[idx]} item={item} idx={idx}/>
                 {/each}
             </tbody>
             </table>

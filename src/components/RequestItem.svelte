@@ -1,11 +1,8 @@
 <script>
-    import { parseRequest, matchesFilter } from "../utils/request-item-utils";
-    import { onMount } from 'svelte';
+    import { matchesFilter } from "../utils/request-item-utils";
     export let item;
     export let idx;
 
-    let request = {};
-    let response = {};
     let showDetails = false;
     let hidden = false;
 
@@ -14,20 +11,8 @@
     }
 
     export const filter = (filter) => {
-        hidden = !matchesFilter(filter, item);
+        hidden = !matchesFilter(filter, item.raw);
     }
-
-    onMount(() => {
-        request = parseRequest(item.request.value, item.request.base64 === 'true');
-        if(item.response) {
-            response = parseRequest(item.response.value, item.request.base64 === 'true');
-        } else {
-            response = {
-                body: '',
-                headers: []
-            }
-        }
-    })
 
     const prettyJson = (content) => {
         try {
@@ -41,10 +26,10 @@
 {#if !hidden}
     <tr id="item-row-main-{idx}" on:click={() => {showDetails = !showDetails}}>
         <td class="id-column">&#35;{idx}</td>
-        <td class="time-column">{item.time.value}</td>
-        <td class="method-column">{item.method.value}</td>
-        <td class="url-column">{item.url.value}</td>
-        <td class="status-column">{item.status.value}</td>
+        <td class="time-column">{item.raw.time.value}</td>
+        <td class="method-column">{item.raw.method.value}</td>
+        <td class="url-column">{item.raw.url.value}</td>
+        <td class="status-column">{item.raw.status.value}</td>
     </tr>
     {#if showDetails}
     <tr id="item-row-details-{idx}">
@@ -68,14 +53,14 @@
                                 <tr>
                                     <td>
                                         <ul class="list-group">
-                                        {#each request.headers as {key, value}}
+                                        {#each item.request.headers as {key, value}}
                                             <li class="list-group-item"><span class="fw-bold">{key}:</span> {value}</li>
                                         {/each}
                                         </ul>
                                     </td>
                                     <td>
                                         <pre>
-                                            {prettyJson(request.body)}
+                                            {prettyJson(item.request.body)}
                                         </pre></td>
                                 </tr>
                             </tbody>
@@ -100,14 +85,14 @@
                                 <tr>
                                     <td>
                                         <ul class="list-group">
-                                            {#each response.headers as {key, value}}
+                                            {#each item.response.headers as {key, value}}
                                                 <li class="list-group-item"><span class="fw-bold">{key}:</span> {value}</li>
                                             {/each}
                                             </ul>
                                     </td>
                                     <td>
                                         <pre>
-                                            {prettyJson(response.body)}
+                                            {prettyJson(item.response.body)}
                                         </pre>
                                     </td>
                                 </tr>
