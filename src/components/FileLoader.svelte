@@ -2,22 +2,23 @@
     import { is_empty } from "svelte/internal";
     import { parseXml } from '../utils/xml2json';
     import { parseRawItem } from '../utils/request-item-parser';
+    import { FileUploaderButton, Button } from "carbon-components-svelte";
+    import TrashCan16 from "carbon-icons-svelte/lib/TrashCan16";
 
     export let onFileLoaded = (rawItems) => {};
     export let onClear = () => {};
 
-    let files = []; 
     let items = [];
 
-    const loadFile = () => {
-        if (is_empty(files)) {
+    const loadFile = (event) => {
+        if (is_empty(event.target.files)) {
             window.alert("No file selected.");
+            return;
         }
-        let file = files[0];
+        let file = event.target.files[0]
         file.text().then(xml => {
             let obj = parseXml(xml);
             items = obj.items[1].item.map(item => parseRawItem(item));
-            console.log(items);
             onFileLoaded(items);
         })
     }
@@ -27,8 +28,5 @@
     }
 </script>
 
-
-<form class="d-flex">
-    <input class="form-control me-2" type="file" bind:files on:change={() => loadFile()}>
-    <button class="btn btn-outline-danger" type="button" on:click={clear}>Clear</button>
-</form>
+<FileUploaderButton labelText="Load file..." on:change={(e) => loadFile(e)}/>
+<Button kind="danger" iconDescription="Clear" icon={TrashCan16} on:click={clear}/>
